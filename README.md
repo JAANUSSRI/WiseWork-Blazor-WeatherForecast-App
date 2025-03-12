@@ -1,4 +1,4 @@
-# **The Blazor Weather App**
+# **The Blazor Weather Forecast App**
 
 Responsive web application built using Blazor WebAssembly. 
 It provides real-time weather updates for any city worldwide, along with a 5-day weather forecast. 
