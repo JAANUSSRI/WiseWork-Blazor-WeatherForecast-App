@@ -1,8 +1,21 @@
 using BlazorApp.Server.Services;
+using MongoDB.Driver;
+
 //using BlazorApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add MongoDB configuration
+builder.Services.Configure<MongoDBSettings>(
+    builder.Configuration.GetSection("MongoDB"));
+
+builder.Services.AddSingleton<IMongoClient>(sp =>
+    new MongoClient(builder.Configuration["MongoDB:ConnectionString"]));
+
+//mongodb + srv://jaanussrikg:<vjj@AMPA12345>@cluster0.lwgo1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+builder.Services.AddScoped<IMongoDatabase>(sp =>
+    sp.GetRequiredService<IMongoClient>().GetDatabase("WeatherForecast"));
 
 // Add CORS Policy
 builder.Services.AddCors(options =>
@@ -15,6 +28,7 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader();  // Allows all headers
         });
 });
+
 
 
 // Add services to the container.

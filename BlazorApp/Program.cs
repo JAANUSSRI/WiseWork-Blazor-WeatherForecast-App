@@ -16,19 +16,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 // Register WeatherService
 builder.Services.AddScoped<GetWeatherService>();
 
-// Register Supabase client with options
-//builder.Services.AddScoped(provider =>
-//    new Supabase.Client(
-//        builder.Configuration["Supabase:Url"],
-//        builder.Configuration["Supabase:Key"],
-//        new Supabase.SupabaseOptions
-//        {
-//            AutoRefreshToken = true,
-//            AutoConnectRealtime = true
-//        }
-//    )
-//);
-
 builder.Services.AddScoped(provider =>
     new Supabase.Client(
         "https://rfthifljiyemphuqyhmy.supabase.co",

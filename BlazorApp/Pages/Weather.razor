@@ -4,6 +4,8 @@
 @inject Services.AuthService AuthService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@inject HttpClient Http
+
 
 @if (user == null)
 {
@@ -59,6 +61,9 @@ else
                         <p><strong>Visibility:</strong> @weatherData!.Visibility km</p>
                         <p><strong>Sunrise:</strong> @ConvertToDateTime(weatherData!.Sunrise)</p>
                         <p><strong>Sunset:</strong> @ConvertToDateTime(weatherData!.Sunset)</p>
+                        <button class="btn btn-like" @onclick="() => LikeLocation(weatherData.Name)">
+                            ❤️ Like
+                        </button>
                     </div>
                 </div>
             </div>
@@ -80,6 +85,9 @@ else
                             <p><strong>Humidity:</strong> @forecast.Humidity %</p>
                             <p><strong>Pressure:</strong> @forecast.Pressure hPa</p>
                             <p><strong>Visibility:</strong> @forecast.Visibility km</p>
+                            <button class="btn btn-like" @onclick="() => LikeLocation(forecast.Name)">
+                                ❤️ Like
+                            </button>
                         </div>
                     </div>
                 }
@@ -243,5 +251,41 @@ else
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+    }
+    private async Task LikeLocation(string locationName)
+    {
+        if (user == null)
+        {
+            errorMessage = "Please log in to like a location.";
+            return;
+        }
+
+        var likeData = new
+        {
+            UserId = user.Id,
+            UserEmail = user.Email,
+            Location = locationName,
+            Timestamp = DateTime.UtcNow
+        };
+        try
+        {
+
+            var response = await Http.PostAsJsonAsync("api/likes", likeData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Show a success message or update the UI
+                errorMessage = "Location liked successfully!";
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Failed to like the location. Server response: {errorContent}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
     }
 }
