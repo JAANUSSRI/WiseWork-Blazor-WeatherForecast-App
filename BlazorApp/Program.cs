@@ -10,8 +10,14 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Register HttpClient
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+//// Register HttpClient
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+// Register HttpClient with the correct base address
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri("https://localhost:7124") // Update this to match your backend URL
+});
 
 // Register WeatherService
 builder.Services.AddScoped<GetWeatherService>();
@@ -30,5 +36,8 @@ builder.Services.AddScoped(provider =>
 
 // Register AuthService
 builder.Services.AddScoped<AuthService>();
+
+//// Add MongoDB service
+//builder.Services.AddSingleton<MongoDBService>();
 
 await builder.Build().RunAsync();

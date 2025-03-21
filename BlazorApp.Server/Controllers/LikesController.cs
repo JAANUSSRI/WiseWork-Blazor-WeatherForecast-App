@@ -47,26 +47,20 @@ namespace BlazorApp.Server.Controllers
         {
             try
             {
-                // Validate the input
                 if (like == null || string.IsNullOrEmpty(like.UserId))
                 {
                     return BadRequest("Invalid like data.");
                 }
 
-                // Set the timestamp
                 like.Timestamp = DateTime.UtcNow;
 
-                // Insert the like into the MongoDB collection
                 await _likesCollection.InsertOneAsync(like);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                // Log the error (you can use a logging framework like Serilog or ILogger)
                 Console.WriteLine($"Error adding like: {ex.Message}");
-
-                // Return a 500 Internal Server Error
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
